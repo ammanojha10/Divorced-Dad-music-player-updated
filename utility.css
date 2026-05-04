@@ -1,0 +1,32 @@
+* {
+    box-sizing: border-box;
+}
+
+.border {
+    border: 0px solid rgb(255, 255, 255);
+    margin: 3px;
+}
+
+.flex {
+    display: flex;
+}
+
+.justify-content-center {
+    justify-content: center;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.m1 {
+    margin: 2px;
+}
+
+.p1 {
+    padding: 2px;
+}
+
+.invert {
+    filter: invert(100%);
+}

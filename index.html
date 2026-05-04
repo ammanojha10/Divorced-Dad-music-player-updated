@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divorced Dad Music</title>
+ 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Special+Elite&display=swap" rel="stylesheet">
+ 
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="utility.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+ 
+    <!-- ============================================================
+         SVG FILTER DEFINITIONS
+         - chromatic: RGB channel split for chromatic aberration effect
+         - corrosion-noise: fractal noise for corroded metal texture
+    ============================================================ -->
+    <svg style="position:absolute; width:0; height:0; overflow:hidden;">
+        <defs>
+ 
+            <!-- Chromatic Aberration Filter -->
+            <filter id="chromatic" x="-10%" y="-10%" width="120%" height="120%">
+                <feColorMatrix type="matrix" in="SourceGraphic" result="red"
+                    values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"/>
+                <feOffset in="red" dx="-0.5" dy="0" result="red-shift"/>
+                <feColorMatrix type="matrix" in="SourceGraphic" result="blue"
+                    values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0"/>
+                <feOffset in="blue" dx="0.5" dy="0" result="blue-shift"/>
+                <feBlend in="red-shift" in2="SourceGraphic" mode="screen" result="rb"/>
+                <feBlend in="rb" in2="blue-shift" mode="screen"/>
+            </filter>
+ 
+            <!-- Corrosion Noise Filter -->
+            <filter id="corrosion-noise">
+                <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" result="noise"/>
+                <feColorMatrix type="matrix"
+                    values="0 0 0 0 0
+                            0 0 0 0 0
+                            0 0 0 0 0
+                            0 0 0 0.08 0"/>
+            </filter>
+ 
+        </defs>
+    </svg>
+ 
+ 
+    <!-- ============================================================
+         CYBERSIGILISM WALLPAPER
+         Full-page SVG background with sigil geometry, grid lines,
+         cross markers, and a large central occult-style sigil.
+         Sits behind everything at z-index: -2.
+    ============================================================ -->
+    <div class="sigil-wallpaper">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <!-- Repeating sigil tile pattern -->
+                <pattern id="sigil-grid" width="400" height="400" patternUnits="userSpaceOnUse">
+                    <!-- Diagonal and horizontal grid lines -->
+                    <path d="M 0 400 L 400 0 M 100 0 L 100 400 M 0 150 L 400 150"
+                        stroke="rgba(255,0,0,0.05)" stroke-width="0.5" fill="none"/>
+                    <!-- Intersection dot -->
+                    <circle cx="100" cy="150" r="2" fill="rgba(255,0,0,0.1)"/>
+                    <!-- Cross marker -->
+                    <path d="M 300 50 L 320 70 M 320 50 L 300 70"
+                        stroke="rgba(255,0,0,0.08)" stroke-width="1"/>
+                    <!-- Broken rectangle fragment -->
+                    <rect x="50" y="50" width="30" height="30"
+                        stroke="rgba(255,0,0,0.04)" fill="none" stroke-dasharray="5 2"/>
+                    <!-- Triangle rune -->
+                    <path d="M 200 200 L 250 300 L 150 280 Z"
+                        stroke="rgba(255,0,0,0.03)" fill="none"/>
+                </pattern>
+            </defs>
+ 
+            <!-- Apply the tile pattern -->
+            <rect width="100%" height="100%" fill="url(#sigil-grid)"/>
+ 
+            <!-- Large central sigil watermark -->
+            <g opacity="0.04" transform="translate(500, 300) scale(1.5)">
+                <path d="M 0 -200 L 50 -50 L 200 0 L 50 50 L 0 200 L -50 50 L -200 0 L -50 -50 Z"
+                    stroke="#8b0000" stroke-width="1" fill="none"/>
+                <path d="M -150 -150 L 150 150 M 150 -150 L -150 150"
+                    stroke="#8b0000" stroke-width="0.5"/>
+                <circle cx="0" cy="0" r="100"
+                    stroke="#8b0000" stroke-width="0.5" stroke-dasharray="10 5"/>
+            </g>
+        </svg>
+    </div>
+
+    <div id="industrial-3d-bg" class="industrial-3d-bg" aria-hidden="true"></div>
+ 
+ 
+    <!-- ============================================================
+         MAIN LAYOUT CONTAINER
+         Two-column flex layout: .left sidebar + .right main content
+    ============================================================ -->
+    <div class="container flex m1 p1">
+ 
+ 
+        <!-- ========================================================
+             LEFT SIDEBAR
+             Contains: logo + nav row, library with song list
+        ======================================================== -->
+        <div class="left border bg-lightpink">
+ 
+            <!-- Logo + Navigation Row -->
+            <div class="home bg-lightpink m1 p1 roundedcorner">
+                <div id="skull-3d-stage" class="skull-3d-stage" aria-label="Divorced Dad Music logo">
+                    <img src="spiked_skull_logo.png" alt="Divorced Dad Logo" class="main-logo">
+                </div>
+                <ul>
+                    <li id="home-btn">
+                        <img src="home.svg" alt="Home">
+                        Home
+                    </li>
+                    <li class="search-container">
+                        <img src="search.svg" alt="Search">
+                        <input type="text" id="search-input" placeholder="SEARCH...">
+                    </li>
+                </ul>
+            </div>
+ 
+            <!-- Library Panel -->
+            <div class="library bg-lightpink m1 p1 roundedcorner">
+                <div class="library-header">
+                    <h3>Library</h3>
+                    <div class="library-btns">
+                        <!-- Add button links to Spotitrack for importing -->
+                        <a href="https://spotitrack.com/" target="_blank">
+                            <button class="btn-add" title="Import from Spotitrack">
+                                <img src="add.svg" alt="Add" class="addicon">
+                            </button>
+                        </a>
+                        <button class="btn-add" title="Expand library">
+                            <img src="expand.svg" alt="Expand" class="expandicon">
+                        </button>
+                    </div>
+                </div>
+ 
+                <!-- Song list populated by script.js -->
+                <div class="librarysongs">
+                    <ul>
+                        <li>Loading songs...</li>
+                    </ul>
+                </div>
+            </div>
+ 
+        </div>
+        <!-- END LEFT SIDEBAR -->
+ 
+ 
+        <!-- ========================================================
+             RIGHT MAIN CONTENT
+             Contains: header bar, playlist grid/view, winamp player,
+             EQ panel docked below winamp, EQ toggle button
+        ======================================================== -->
+        <div class="right border bg-lightpink">
+ 
+            <!-- Top Navigation Bar -->
+            <div class="header roundedcorner">
+ 
+                <!-- Hamburger (mobile only) -->
+                <button class="btn-hamburger" title="Toggle sidebar">
+                    <img src="hamburger.svg" alt="Menu" class="hamburgericon">
+                </button>
+ 
+                <!-- Back / Forward history navigation -->
+                <div class="nav arrowbuttons">
+                    <button class="btn-left" id="btn-back" disabled title="Go back">
+                        <img src="left-2-svgrepo-com.svg" alt="Back" class="lefticon invert">
+                    </button>
+                    <button class="btn-left" id="btn-forward" disabled title="Go forward">
+                        <img src="right-2-svgrepo-com.svg" alt="Forward" class="righticon invert">
+                    </button>
+                </div>
+ 
+                <!-- Auth buttons -->
+                <div class="buttons">
+                    <div class="system-ticker" id="system-ticker">
+                        <div class="ticker-content">SYSTEM: INITIALIZING... </div>
+                    </div>
+                    <button class="btn-right" id="login-btn">Login</button>
+                    <button class="btn-right" id="signup-btn">Sign up</button>
+                </div>
+ 
+            </div>
+            <!-- END HEADER -->
+ 
+ 
+            <!-- Playlist Grid + Playlist Detail View -->
+            <div class="tracks-playlist roundedcorner">
+ 
+                <h2 class="cigg">We divorced homie!!</h2>
+
+                <div id="media-3d-stage" class="media-3d-stage" aria-hidden="true"></div>
+ 
+                <!-- ---- Playlist Card Grid ---- -->
+                <div class="yourplaylists">
+ 
+                    <div class="playlistcard" data-playlist="One Last Cigg">
+                        <h2>One Last Cigg</h2>
+                        <p>One last smoke before the drive back.</p>
+                    </div>
+ 
+                    <div class="playlistcard" data-playlist="Truck & Tears">
+                        <h2>Truck &amp; Tears</h2>
+                        <p>Windows down, volume up, nobody watching.</p>
+                    </div>
+ 
+                    <div class="playlistcard" data-playlist="Every Other Weekend">
+                        <h2>Every Other Weekend</h2>
+                        <p>48 hours, two kids, and a lot of frozen pizza.</p>
+                    </div>
+ 
+                    <div class="playlistcard" data-playlist="Parking Lot Prayers">
+                        <h2>Parking Lot Prayers</h2>
+                        <p>Sitting outside the house you used to live in.</p>
+                    </div>
+ 
+                    <div class="playlistcard" data-playlist="Grill & Chill">
+                        <h2>Grill &amp; Chill</h2>
+                        <p>Just a man, some coals, and questionable life choices.</p>
+                    </div>
+ 
+                    <!-- Create new playlist card -->
+                    <div class="playlistcard create-card" id="create-playlist-btn">
+                        <div class="create-plus">+</div>
+                        <h2>New Playlist</h2>
+                        <p>Make it yours.</p>
+                    </div>
+ 
+                </div>
+                <!-- END PLAYLIST GRID -->
+ 
+ 
+                <!-- ---- Playlist Detail View (hidden by default) ---- -->
+                <div class="playlist-view" style="display: none;">
+                    <div class="playlist-view-header">
+                        <h2 id="playlist-view-title" class="cigg">Playlist Title</h2>
+                        <p id="playlist-view-desc"
+                            style="color:#a0a0a0; font-family:'Courier New'; margin-bottom:20px;">
+                            Description
+                        </p>
+                    </div>
+                    <!-- Song rows populated by script.js -->
+                    <div class="playlist-view-songs librarysongs">
+                        <ul id="playlist-song-list"></ul>
+                    </div>
+                </div>
+                <!-- END PLAYLIST VIEW -->
+ 
+            </div>
+            <!-- END TRACKS/PLAYLIST PANEL -->
+ 
+ 
+            <!-- ========================================================
+                 WINAMP ALIEN PLAYER
+                 Fixed draggable music player with animated ears,
+                 play controls, CRT screen display, seek/volume sliders.
+                 The EQ panel and toggle sit directly below it.
+            ======================================================== -->
+            <div class="playbar winamp-alien" id="winamp-alien">
+ 
+                <!-- Speaker ears (react to audio via JS) -->
+                <div class="winamp-ears">
+                    <div class="ear left-ear">
+                        <div class="speaker-cone"></div>
+                        <div class="speaker-cone"></div>
+                        <div class="speaker-cone"></div>
+                    </div>
+                    <div class="ear right-ear">
+                        <div class="speaker-cone"></div>
+                        <div class="speaker-cone"></div>
+                        <div class="speaker-cone"></div>
+                    </div>
+                </div>
+ 
+                <!-- Playback controls row -->
+                <div class="winamp-top-controls songbutton">
+                    <img id="shuffle" src="shuffle.svg"       alt="Shuffle"   class="control-icon">
+                    <img id="prev"    src="prevsong.svg"       alt="Previous">
+                    <img id="play"    src="play-button-.svg"   alt="Play">
+                    <img id="next"    src="nextsong.svg"       alt="Next">
+                    <img id="repeat"  src="repeat.svg"         alt="Repeat"    class="control-icon">
+                </div>
+ 
+                <!-- CRT screen: song name, artist, album, time -->
+                <div class="winamp-screen">
+                    <div class="winamp-power-led"></div>
+                    <div class="songinfo"></div>
+                    <div class="songartist"></div>
+                    <div class="songalbum"></div>
+                    <div class="songtime"></div>
+                </div>
+ 
+                <!-- Seek bar + volume slider -->
+                <div class="winamp-sliders">
+                    <div class="seekbar">
+                        <div class="hovertime">0:00</div>
+                        <div class="circle"></div>
+                    </div>
+                    <div class="volume">
+                        <img src="volume-knob.svg" alt="Volume" class="volumeicon">
+                        <input type="range" class="volumeslider" min="0" max="1" step="0.01" value="1">
+                    </div>
+                </div>
+ 
+                <!-- EQ Toggle button docked inside winamp body -->
+                <div class="eq-toggle-container">
+                    <button id="toggle-eq-btn" class="hl-toggle-switch" title="Toggle EQ / AMP panel">
+                        <div class="switch-emblem">
+                            <img src="spiked_skull_logo2.png" alt="λ" class="switch-logo-img">
+                        </div>
+                        <span class="switch-txt">PROC</span>
+                        <div class="switch-light"></div>
+                    </button>
+                </div>
+ 
+            </div>
+            <!-- END WINAMP ALIEN -->
+ 
+ 
+            <!-- ========================================================
+                 INDUSTRIAL EQ & AMP PANEL
+                 Draggable panel docked below the winamp player.
+                 Inspired by the Half-Life Winamp skin aesthetic.
+                 Hidden by default — toggled via #toggle-eq-btn.
+            ======================================================== -->
+            <div class="industrial-eq-panel draggable-panel" id="industrial-eq-panel" style="display: none;">
+ 
+                <!-- Grain texture overlay (pure CSS, no image) -->
+                <div class="panel-grain-overlay"></div>
+ 
+                <!-- ---- Panel Header / Drag Handle ---- -->
+                <div class="panel-rack-top" id="eq-drag-handle">
+                    <div class="perforated-mesh"></div>
+                    <div class="panel-rivet tr"></div>
+                    <div class="panel-rivet tl"></div>
+                    <div class="header-led-display">
+                        <span class="dot-matrix-title">B-60 AUDIO PROCESSOR // SEC. 7 G-M</span>
+                        <div class="scanlines"></div>
+                    </div>
+                    <button class="panel-close-btn" id="close-eq-btn" title="Close EQ panel"></button>
+                </div>
+ 
+                <!-- ---- Main Rack Body ---- -->
+                <div class="panel-main-rack">
+ 
+                    <!-- Left column: Lambda logo + Amplifier controls -->
+                    <div class="rack-column-left">
+ 
+                        <!-- Logo emblem -->
+                        <div class="lambda-emblem-container">
+                            <div class="lambda-circle">
+                                <img src="spiked_skull_logo2.png" alt="Skull Logo" class="eq-logo-img">
+                            </div>
+                        </div>
+ 
+                        <!-- Amplifier: Gain + Compression sliders -->
+                        <div class="amp-module">
+                            <div class="module-label">AMPLIFIER</div>
+ 
+                            <!-- Gain control -->
+                            <div class="amp-row-ind">
+                                <div class="led-block">
+                                    <label>GAIN</label>
+                                    <div class="led-display-ind">
+                                        <span id="gain-readout">0.0</span>
+                                    </div>
+                                </div>
+                                <div class="slider-h-track">
+                                    <input type="range" id="ind-amp-gain"
+                                        min="-20" max="20" step="0.1" value="0"
+                                        class="hl-slider-h">
+                                </div>
+                            </div>
+ 
+                            <!-- Compression control -->
+                            <div class="amp-row-ind">
+                                <div class="led-block">
+                                    <label>COMP</label>
+                                    <div class="led-display-ind">
+                                        <span id="comp-readout">0.00</span>
+                                    </div>
+                                </div>
+                                <div class="slider-h-track">
+                                    <input type="range" id="ind-amp-comp"
+                                        min="0" max="1" step="0.01" value="0"
+                                        class="hl-slider-h">
+                                </div>
+                            </div>
+ 
+                        </div>
+                        <!-- END AMP MODULE -->
+ 
+                    </div>
+                    <!-- END LEFT COLUMN -->
+ 
+ 
+                    <!-- Right column: EQ faders + presets -->
+                    <div class="rack-column-right">
+ 
+                        <!-- EQ header row -->
+                        <div class="eq-module-header">
+                            <div class="hl-logo-text">HALF-LIFE</div>
+                            <div class="wire-decoration"></div>
+                        </div>
+ 
+                        <!-- 5-band EQ vertical faders -->
+                        <div class="eq-faders-rack">
+ 
+                            <!-- SUB 60Hz -->
+                            <div class="hl-fader-unit">
+                                <div class="hl-fader-led" id="eq-60-readout">0.0</div>
+                                <div class="hl-fader-track">
+                                    <input type="range" id="ind-eq-60"
+                                        min="-12" max="12" step="0.1" value="0"
+                                        class="hl-fader-v">
+                                </div>
+                                <div class="hl-fader-label">SUB</div>
+                            </div>
+ 
+                            <!-- BASS 250Hz -->
+                            <div class="hl-fader-unit">
+                                <div class="hl-fader-led" id="eq-250-readout">0.0</div>
+                                <div class="hl-fader-track">
+                                    <input type="range" id="ind-eq-250"
+                                        min="-12" max="12" step="0.1" value="0"
+                                        class="hl-fader-v">
+                                </div>
+                                <div class="hl-fader-label">BASS</div>
+                            </div>
+ 
+                            <!-- MID 1kHz -->
+                            <div class="hl-fader-unit">
+                                <div class="hl-fader-led" id="eq-1000-readout">0.0</div>
+                                <div class="hl-fader-track">
+                                    <input type="range" id="ind-eq-1000"
+                                        min="-12" max="12" step="0.1" value="0"
+                                        class="hl-fader-v">
+                                </div>
+                                <div class="hl-fader-label">MID</div>
+                            </div>
+ 
+                            <!-- PRESENCE 4kHz -->
+                            <div class="hl-fader-unit">
+                                <div class="hl-fader-led" id="eq-4000-readout">0.0</div>
+                                <div class="hl-fader-track">
+                                    <input type="range" id="ind-eq-4000"
+                                        min="-12" max="12" step="0.1" value="0"
+                                        class="hl-fader-v">
+                                </div>
+                                <div class="hl-fader-label">PRES</div>
+                            </div>
+ 
+                            <!-- TREBLE 12kHz -->
+                            <div class="hl-fader-unit">
+                                <div class="hl-fader-led" id="eq-12000-readout">0.0</div>
+                                <div class="hl-fader-track">
+                                    <input type="range" id="ind-eq-12000"
+                                        min="-12" max="12" step="0.1" value="0"
+                                        class="hl-fader-v">
+                                </div>
+                                <div class="hl-fader-label">TREB</div>
+                            </div>
+ 
+                        </div>
+                        <!-- END EQ FADERS -->
+ 
+                        <!-- Preset buttons -->
+                        <div class="hl-presets-rack">
+                            <button class="preset-btn-hl" data-preset="flat">FLAT</button>
+                            <button class="preset-btn-hl" data-preset="bass">BASS</button>
+                            <button class="preset-btn-hl" data-preset="vocal">VOCAL</button>
+                            <button class="preset-btn-hl" data-preset="rock">ROCK</button>
+                            <button class="preset-btn-hl" data-preset="dark">DARK</button>
+                        </div>
+ 
+                    </div>
+                    <!-- END RIGHT COLUMN -->
+ 
+                </div>
+                <!-- END MAIN RACK -->
+ 
+                <!-- Bottom corner rivets -->
+                <div class="panel-rivet bl"></div>
+                <div class="panel-rivet br"></div>
+ 
+            </div>
+            <!-- END EQ PANEL -->
+ 
+        </div>
+        <!-- END RIGHT MAIN -->
+ 
+    </div>
+    <!-- END MAIN CONTAINER -->
+ 
+ 
+    <!-- ============================================================
+         FOOTER
+    ============================================================ -->
+    <footer>
+        <div class="footer-links">
+            <div>
+                <h4>Discover</h4>
+                <ul>
+                    <li><a href="#">Sad Country</a></li>
+                    <li><a href="#">Classic Rock Hits</a></li>
+                    <li><a href="#">Dad Driving Alone</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Moods</h4>
+                <ul>
+                    <li><a href="#">Crying in the Truck</a></li>
+                    <li><a href="#">Grilling Alone</a></li>
+                    <li><a href="#">Visitation Weekend</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Legal</a></li>
+                    <li><a href="#">Therapy</a></li>
+                </ul>
+            </div>
+        </div>
+        <p class="webtitle">© 2024 Divorced Dad Music — We're fine. Really.</p>
+    </footer>
+ 
+ 
+    <!-- ============================================================
+         CREATE PLAYLIST MODAL
+         Shown when user clicks the "+ New Playlist" card.
+         Allows naming, describing, and selecting songs.
+    ============================================================ -->
+    <div id="create-playlist-modal" class="modal-overlay" style="display:none;"
+        role="dialog" aria-modal="true" aria-labelledby="modal-title-label">
+ 
+        <div class="modal-box">
+            <h2 class="modal-title" id="modal-title-label">CREATE PLAYLIST</h2>
+ 
+            <input type="text"   id="pl-name-input"   class="modal-input"
+                placeholder="PLAYLIST NAME..."    autocomplete="off">
+            <input type="text"   id="pl-desc-input"   class="modal-input"
+                placeholder="VIBE DESCRIPTION..."  autocomplete="off">
+            <input type="text"   id="pl-song-search"  class="modal-input modal-search-input"
+                placeholder="SEARCH SONGS..."     autocomplete="off">
+ 
+            <!-- Song selection list (populated by JS) -->
+            <div class="modal-song-list" id="modal-song-list"></div>
+ 
+            <div class="modal-selected-count">
+                <span id="modal-count">0</span> songs selected
+            </div>
+ 
+            <div class="modal-actions">
+                <button id="save-playlist-btn"   class="btn-right">SAVE</button>
+                <button id="cancel-playlist-btn" class="btn-right">CANCEL</button>
+            </div>
+        </div>
+ 
+    </div>
+    <!-- END CREATE PLAYLIST MODAL -->
+ 
+ 
+    <!-- WIRING LAYER -->
+    <svg id="wiring-layer" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:900;"></svg>
+  
+    <!-- ============================================================
+         CRT OVERLAY
+         Fixed full-screen overlay for scanlines, grain, and vignette.
+         Must be last in body so it sits above all content.
+         pointer-events: none so it never blocks clicks.
+    ============================================================ -->
+    <div class="crt-overlay"></div>
+ 
+ 
+    <!-- Main application script -->
+    <script src="script.js"></script>
+    <script type="module" src="three-ui.js"></script>
+ 
+</body>
+</html>
